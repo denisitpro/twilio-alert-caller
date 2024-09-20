@@ -1,3 +1,0 @@
-Flask==3.0.3
-Twilio==9.3.1
-gunicorn==23.0.0
