@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from twilio.rest import Client
 import os
 import sys
@@ -29,15 +29,11 @@ if missing_env_vars:
 # Initialize Twilio client
 client = Client(account_sid, auth_token)
 
-@app.route('/call', methods=['POST'])
-def make_call():
-    # Get the 'to' phone number from the request
-    data = request.json
-    to_number = data.get('to')
-
+@app.route('/call/<to_number>', methods=['GET'])
+def make_call(to_number):
     if not to_number:
         # Return an error if the 'to' number is missing
-        return jsonify({'error': 'Missing "to" phone number in request.'}), 400
+        return jsonify({'error': 'Missing "to" phone number in URL.'}), 400
 
     try:
         # Initiate the call using the Twilio API

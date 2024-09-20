@@ -42,9 +42,7 @@ The application will now be running on `http://localhost:8080`.
 To make a test call using `curl`, run the following command:
 
 ```bash
-curl -X POST http://localhost:8080/call \
-     -H "Content-Type: application/json" \
-     -d '{"to": "+1234567890"}'
+curl http://localhost:5000/call/+71234567890
 ```
 
 ## Русский 
@@ -87,6 +85,5 @@ curl -X POST http://localhost:8080/call \
 Чтобы сделать тестовый звонок с использованием `curl`, выполните следующую команду:
 
 ```bash
-curl -X POST http://localhost:8080/call \
-     -H "Content-Type: application/json" \
-     -d '{"to": "+1234567890"}'
+curl http://localhost:5000/call/+71234567890
+```
