@@ -1,0 +1,31 @@
+ARG PYTHON_IMAGE_VERSION="3.12.6"
+FROM python:${PYTHON_IMAGE_VERSION}
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+RUN pip install flask twilio
+COPY caller-twilio.py /app/caller-twilio.py
+
+WORKDIR /app
+
+ARG TIMESTAMP
+ARG VERSION
+ARG GIT_COMMIT_HASH
+
+RUN echo "version: ${VERSION}" > version.txt && \
+    echo "timestamp: ${TIMESTAMP}" >> version.txt && \
+    echo "commitHash: ${GIT_COMMIT_HASH}" >> version.txt
+
+LABEL timestamp="${TIMESTAMP}"
+LABEL version="${VERSION}"
+LABEL commitHash="${GIT_COMMIT_HASH}"
+
+# Set environment variable for Flask app
+ENV FLASK_APP=caller-twilio.py
+
+# Expose the port (default is 5000)
+EXPOSE 5000
+
+# Command to run the application
+CMD ["python", "caller-twilio.py"]

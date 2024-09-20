@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from twilio.rest import Client
 import os
+import sys
 
 app = Flask(__name__)
 
@@ -9,10 +10,21 @@ account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
 auth_token = os.environ.get('TWILIO_AUTH_TOKEN')
 twilio_number = os.environ.get('TWILIO_PHONE_NUMBER')
 twiml_url = os.environ.get('TWIML_URL', 'http://demo.twilio.com/docs/voice.xml')  # Default to demo TwiML URL
-
-# Address binding variables
 host = os.environ.get('TWILIO_BIND_ADDRESS', '0.0.0.0')  # Default address is 0.0.0.0
 port = int(os.environ.get('TWILIO_PORT', 5000))  # Default port is 5000
+
+# Check for required environment variables
+missing_env_vars = []
+if not account_sid:
+    missing_env_vars.append('TWILIO_ACCOUNT_SID')
+if not auth_token:
+    missing_env_vars.append('TWILIO_AUTH_TOKEN')
+if not twilio_number:
+    missing_env_vars.append('TWILIO_PHONE_NUMBER')
+
+if missing_env_vars:
+    print(f"Error: Missing required environment variables: {', '.join(missing_env_vars)}")
+    sys.exit(1)  # Exit if required env vars are missing
 
 # Initialize Twilio client
 client = Client(account_sid, auth_token)
