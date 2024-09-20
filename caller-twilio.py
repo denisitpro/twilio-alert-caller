@@ -1,9 +1,14 @@
-from flask import Flask, jsonify
+import logging
+from flask import Flask, jsonify, request
 from twilio.rest import Client
 import os
 import sys
+from datetime import datetime
 
 app = Flask(__name__)
+
+# Set up logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 
 # Load environment variables
 account_sid = os.environ.get('TWILIO_ACCOUNT_SID')
@@ -29,10 +34,25 @@ if missing_env_vars:
 # Initialize Twilio client
 client = Client(account_sid, auth_token)
 
-@app.route('/call/<to_number>', methods=['GET'])
+def log_request():
+    """Log the request details: timestamp, sender IP, method, and URI"""
+    timestamp = datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')
+    sender_ip = request.remote_addr
+    method = request.method
+    uri = request.url
+    logging.info(f"Request received: Timestamp: {timestamp}, Sender IP: {sender_ip}, Method: {method}, URI: {uri}")
+
+@app.route('/call/<to_number>', methods=['GET', 'HEAD', 'POST'])
 def make_call(to_number):
+    # Log the request details
+    log_request()
+
+    # If it's a HEAD request, just return an empty response
+    if request.method == 'HEAD':
+        return '', 200
+
+    # For GET and POST methods, handle the call creation
     if not to_number:
-        # Return an error if the 'to' number is missing
         return jsonify({'error': 'Missing "to" phone number in URL.'}), 400
 
     try:
