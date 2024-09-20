@@ -42,5 +42,4 @@ ENV TWILIO_BIND_ADDRESS=0.0.0.0
 EXPOSE 5000
 
 # Use Gunicorn as the WSGI server in production mode, and bind it to the PORT environment variable
-#CMD ["gunicorn", "--bind", "${TWILIO_BIND_ADDRESS}:${TWILIO_PORT}", "caller-twilio:app"]
 CMD ["sh", "-c", "gunicorn --bind ${TWILIO_BIND_ADDRESS}:${TWILIO_PORT} caller-twilio:app"]
