@@ -39,7 +39,8 @@ ENV TWILIO_PORT=5000
 ENV TWILIO_BIND_ADDRESS=0.0.0.0
 
 # Expose the port (default Flask port is 5000)
-EXPOSE ${TWILIO_PORT}
+EXPOSE 5000
 
 # Use Gunicorn as the WSGI server in production mode, and bind it to the PORT environment variable
-CMD ["gunicorn", "--bind", "${TWILIO_BIND_ADDRESS}:${TWILIO_PORT}", "caller-twilio:app"]
+#CMD ["gunicorn", "--bind", "${TWILIO_BIND_ADDRESS}:${TWILIO_PORT}", "caller-twilio:app"]
+CMD ["sh", "-c", "gunicorn --bind ${TWILIO_BIND_ADDRESS}:${TWILIO_PORT} caller-twilio:app"]
